@@ -1,0 +1,85 @@
+{
+  "name": "pdflab-by-reza",
+  "productName": "PDFLab by reza",
+  "version": "1.0.0",
+  "description": "The open-source offline PDF utility & editor for Windows 10 & 11 x64.",
+  "main": "main.js",
+  "scripts": {
+    "start": "electron .",
+    "build": "electron-builder --win"
+  },
+  "keywords": [
+    "pdf",
+    "offline",
+    "windows",
+    "pdf-editor",
+    "ocr",
+    "merge-pdf",
+    "split-pdf",
+    "compress-pdf",
+    "open-source"
+  ],
+  "author": "reza",
+  "license": "GPL-3.0-or-later",
+  "dependencies": {
+    "jspdf": "^2.5.2",
+    "pdf-lib": "^1.17.1",
+    "pdfjs-dist": "^3.11.174"
+  },
+  "devDependencies": {
+    "electron": "^34.5.8",
+    "electron-builder": "^26.15.3",
+    "png-to-ico": "^3.0.2",
+    "sharp": "^0.35.4"
+  },
+  "build": {
+    "appId": "com.reza.pdflab",
+    "productName": "PDFLab by reza",
+    "directories": {
+      "output": "dist"
+    },
+    "files": [
+      "main.js",
+      "preload.js",
+      "index.html",
+      "styles.css",
+      "app.js",
+      "locales.js",
+      "logo.svg",
+      "logo-icon.svg",
+      "icon.ico",
+      "icon.png",
+      "src/**/*"
+    ],
+    "win": {
+      "icon": "icon.ico",
+      "target": [
+        {
+          "target": "nsis",
+          "arch": [
+            "x64"
+          ]
+        },
+        {
+          "target": "portable",
+          "arch": [
+            "x64"
+          ]
+        },
+        {
+          "target": "dir",
+          "arch": [
+            "x64"
+          ]
+        }
+      ]
+    },
+    "nsis": {
+      "oneClick": false,
+      "allowToChangeInstallationDirectory": true,
+      "createDesktopShortcut": true,
+      "createStartMenuShortcut": true,
+      "shortcutName": "PDFLab by reza"
+    }
+  }
+}

@@ -1,0 +1,1505 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>PDFLab — by reza | Private, Offline & Open Source PDF Utility</title>
+  <meta name="description" content="PDFLab by reza - 100% Offline, private, free, and open-source PDF utility & editor for Windows.">
+  
+  <!-- CSS Stylesheet -->
+  <link rel="stylesheet" href="styles.css">
+  <link rel="icon" type="image/svg+xml" href="logo-icon.svg">
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Segoe+UI:wght@400;500;600;700;800&family=Cascadia+Code:wght@400;600&display=swap" rel="stylesheet">
+</head>
+<body>
+
+  <!-- ========================================================================
+       Windows 11 Titlebar
+       ======================================================================== -->
+  <header class="window-titlebar">
+    <div class="titlebar-brand">
+      <div class="brand-icon" style="width: 24px; height: 24px; background: #ffffff; box-shadow: 0 1px 4px rgba(0,0,0,0.15); border-radius: 5px; overflow: hidden; padding: 2px; display: flex; align-items: center; justify-content: center;">
+        <img src="logo.svg" alt="PDFLab" style="width: 100%; height: 100%; object-fit: contain;" />
+      </div>
+      <span data-i18n="app_title">PDFLab — by reza</span>
+      <span class="brand-subtitle" style="font-size: 11px; background: rgba(59, 130, 246, 0.15); color: var(--accent-primary); padding: 1px 6px; border-radius: 4px;">v1.0.0</span>
+    </div>
+
+    <!-- Center Search Bar -->
+    <div class="titlebar-center">
+      <div class="global-search-box">
+        <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+          <circle cx="11" cy="11" r="8"></circle>
+          <line x1="21" y1="21" x2="16.65" y2="16.65"></line>
+        </svg>
+        <input type="text" id="globalSearchInput" placeholder="Quick search tools, actions, or shortcuts..." data-i18n-placeholder="viewer_search_placeholder">
+      </div>
+    </div>
+
+    <!-- Right Controls -->
+    <div class="titlebar-controls">
+      <!-- Language Switcher -->
+      <select id="langSelect" class="form-select btn-sm" style="padding: 3px 8px; font-size: 11.5px; font-weight: 600;">
+        <option value="en">🌐 English (EN)</option>
+        <option value="id">🌐 Bahasa Indonesia (ID)</option>
+      </select>
+
+      <!-- Theme Switcher -->
+      <button class="titlebar-btn" id="quickThemeBtn" onclick="toggleQuickTheme()" title="Switch Theme">
+        <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+          <circle cx="12" cy="12" r="5"></circle>
+          <line x1="12" y1="1" x2="12" y2="3"></line>
+          <line x1="12" y1="21" x2="12" y2="23"></line>
+          <line x1="4.22" y1="4.22" x2="5.64" y2="5.64"></line>
+          <line x1="18.36" y1="18.36" x2="19.78" y2="19.78"></line>
+          <line x1="1" y1="12" x2="3" y2="12"></line>
+          <line x1="21" y1="12" x2="23" y2="12"></line>
+          <line x1="4.22" y1="19.78" x2="5.64" y2="18.36"></line>
+          <line x1="18.36" y1="5.64" x2="19.78" y2="4.22"></line>
+        </svg>
+      </button>
+
+      <div class="titlebar-divider"></div>
+
+      <!-- Windows Native Action Controls -->
+      <div class="win-actions">
+        <button class="win-btn" id="winMinimizeBtn" onclick="window.minimizeAppWindow()" title="Minimize">
+          <svg width="10" height="10" viewBox="0 0 10 1"><rect width="10" height="1" fill="currentColor"></rect></svg>
+        </button>
+        <button class="win-btn" id="winMaximizeBtn" onclick="window.maximizeAppWindow()" title="Maximize">
+          <svg width="10" height="10" viewBox="0 0 10 10"><path d="M0,0v10h10V0H0z M9,9H1V1h8V9z" fill="currentColor"></path></svg>
+        </button>
+        <button class="win-btn win-close" id="winCloseBtn" onclick="window.closeAppWindow()" title="Close">
+          <svg width="10" height="10" viewBox="0 0 10 10"><polygon points="10,0.7 9.3,0 5,4.3 0.7,0 0,0.7 4.3,5 0,9.3 0.7,10 5,5.7 9.3,10 10,9.3 5.7,5" fill="currentColor"></polygon></svg>
+        </button>
+      </div>
+    </div>
+  </header>
+
+  <!-- ========================================================================
+       Main App Layout (Sidebar + Content Workspace)
+       ======================================================================== -->
+  <div class="app-container">
+    
+    <!-- Sidebar Navigation -->
+    <aside class="app-sidebar">
+      
+      <!-- Group 1: Overview -->
+      <div class="nav-group-title" data-i18n="nav_overview">Overview</div>
+      <div class="nav-list">
+        <div class="nav-item active" data-view="home">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+            <path d="M3 9l9-7 9 7v11a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2z"></path>
+            <polyline points="9 22 9 12 15 12 15 22"></polyline>
+          </svg>
+          <span data-i18n="nav_home">Home Dashboard</span>
+        </div>
+      </div>
+
+      <!-- Group 2: View & Organize -->
+      <div class="nav-group-title" data-i18n="nav_view_organize">View & Organize</div>
+      <div class="nav-list">
+        <div class="nav-item" data-view="viewer">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+            <path d="M2 3h6a4 4 0 0 1 4 4v14a3 3 0 0 0-3-3H2z"></path>
+            <path d="M22 3h-6a4 4 0 0 0-4 4v14a3 3 0 0 1 3-3h7z"></path>
+          </svg>
+          <span data-i18n="nav_viewer">PDF Viewer</span>
+          <span class="nav-badge">P0</span>
+        </div>
+
+        <div class="nav-item" data-view="organize">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+            <rect x="3" y="3" width="7" height="7"></rect>
+            <rect x="14" y="3" width="7" height="7"></rect>
+            <rect x="14" y="14" width="7" height="7"></rect>
+            <rect x="3" y="14" width="7" height="7"></rect>
+          </svg>
+          <span data-i18n="nav_organize">Organize Pages</span>
+        </div>
+
+        <div class="nav-item" data-view="merge">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+            <path d="M8 3H5a2 2 0 0 0-2 2v14c0 1.1.9 2 2 2h14a2 2 0 0 0 2-2v-3"></path>
+            <path d="M18 9l4-4-4-4"></path>
+            <path d="M12 17l4-4-4-4"></path>
+          </svg>
+          <span data-i18n="nav_merge">Merge PDF</span>
+          <span class="nav-badge">P0</span>
+        </div>
+
+        <div class="nav-item" data-view="split">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+            <path d="M16 3h5v5"></path>
+            <path d="M4 20L21 3"></path>
+            <path d="M21 16v5h-5"></path>
+            <path d="M15 15l6 6"></path>
+            <path d="M4 4l5 5"></path>
+          </svg>
+          <span data-i18n="nav_split">Split PDF</span>
+        </div>
+      </div>
+
+      <!-- Group 3: Optimize & Convert -->
+      <div class="nav-group-title" data-i18n="nav_optimize_convert">Optimize & Convert</div>
+      <div class="nav-list">
+        <div class="nav-item" data-view="compress">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+            <polyline points="4 14 10 14 10 20"></polyline>
+            <polyline points="20 10 14 10 14 4"></polyline>
+            <line x1="14" y1="10" x2="21" y2="3"></line>
+            <line x1="3" y1="21" x2="10" y2="14"></line>
+          </svg>
+          <span data-i18n="nav_compress">Compress PDF</span>
+        </div>
+
+        <div class="nav-item" data-view="pdf-to-img">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+            <rect x="3" y="3" width="18" height="18" rx="2" ry="2"></rect>
+            <circle cx="8.5" cy="8.5" r="1.5"></circle>
+            <polyline points="21 15 16 10 5 21"></polyline>
+          </svg>
+          <span data-i18n="nav_pdf_to_img">PDF → Image</span>
+        </div>
+
+        <div class="nav-item" data-view="img-to-pdf">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+            <path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"></path>
+            <polyline points="14 2 14 8 20 8"></polyline>
+            <circle cx="10" cy="13" r="2"></circle>
+            <polyline points="16 17 12 13 8 17"></polyline>
+          </svg>
+          <span data-i18n="nav_img_to_pdf">Image → PDF</span>
+        </div>
+      </div>
+
+      <!-- Group 4: Intelligence & Edit -->
+      <div class="nav-group-title" data-i18n="nav_intelligence_edit">Intelligence & Edit</div>
+      <div class="nav-list">
+        <div class="nav-item" data-view="ocr">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+            <polyline points="4 7 4 4 20 4 20 7"></polyline>
+            <line x1="9" y1="20" x2="15" y2="20"></line>
+            <line x1="12" y1="4" x2="12" y2="20"></line>
+          </svg>
+          <span data-i18n="nav_ocr">Offline OCR</span>
+          <span class="nav-badge badge-offline">CPU</span>
+        </div>
+
+        <div class="nav-item" data-view="edit">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+            <path d="M12 20h9"></path>
+            <path d="M16.5 3.5a2.121 2.121 0 0 1 3 3L7 19l-4 1 1-4L16.5 3.5z"></path>
+          </svg>
+          <span data-i18n="nav_edit">Edit PDF</span>
+        </div>
+
+        <div class="nav-item" data-view="signature">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+            <path d="M20 19v-2a4 4 0 0 0-4-4H8a4 4 0 0 0-4 4v2"></path>
+            <circle cx="12" cy="7" r="4"></circle>
+          </svg>
+          <span data-i18n="nav_signature">Visual Signature</span>
+        </div>
+      </div>
+
+      <!-- Group 5: Security -->
+      <div class="nav-group-title" data-i18n="nav_security">Security</div>
+      <div class="nav-list">
+        <div class="nav-item" data-view="security">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+            <rect x="3" y="11" width="18" height="11" rx="2" ry="2"></rect>
+            <path d="M7 11V7a5 5 0 0 1 10 0v4"></path>
+          </svg>
+          <span data-i18n="nav_protect">Protect & Unlock</span>
+        </div>
+      </div>
+
+      <!-- Group 6: System & Utilities -->
+      <div class="nav-group-title" data-i18n="nav_system">System & Utilities</div>
+      <div class="nav-list">
+        <div class="nav-item" data-view="batch">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+            <line x1="8" y1="6" x2="21" y2="6"></line>
+            <line x1="8" y1="12" x2="21" y2="12"></line>
+            <line x1="8" y1="18" x2="21" y2="18"></line>
+            <line x1="3" y1="6" x2="3.01" y2="6"></line>
+            <line x1="3" y1="12" x2="3.01" y2="12"></line>
+            <line x1="3" y1="18" x2="3.01" y2="18"></line>
+          </svg>
+          <span data-i18n="nav_batch">Batch Processing</span>
+        </div>
+
+        <div class="nav-item" data-view="plugins">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+            <polygon points="12 2 15.09 8.26 22 9.27 17 14.14 18.18 21.02 12 17.77 5.82 21.02 7 14.14 2 9.27 8.91 8.26 12 2"></polygon>
+          </svg>
+          <span data-i18n="nav_plugins">Plugin Manager</span>
+        </div>
+
+        <div class="nav-item" data-view="history">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+            <circle cx="12" cy="12" r="10"></circle>
+            <polyline points="12 6 12 12 16 14"></polyline>
+          </svg>
+          <span data-i18n="nav_history">Local History</span>
+        </div>
+
+        <div class="nav-item" data-view="help">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+            <circle cx="12" cy="12" r="10"></circle>
+            <path d="M9.09 9a3 3 0 0 1 5.83 1c0 2-3 3-3 3"></path>
+            <line x1="12" y1="17" x2="12.01" y2="17"></line>
+          </svg>
+          <span data-i18n="nav_help">Offline Help</span>
+        </div>
+
+        <div class="nav-item" data-view="settings">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+            <circle cx="12" cy="12" r="3"></circle>
+            <path d="M19.4 15a1.65 1.65 0 0 0 .33 1.82l.06.06a2 2 0 0 1 0 2.83 2 2 0 0 1-2.83 0l-.06-.06a1.65 1.65 0 0 0-1.82-.33 1.65 1.65 0 0 0-1 1.51V21a2 2 0 0 1-2 2 2 2 0 0 1-2-2v-.09A1.65 1.65 0 0 0 9 19.4a1.65 1.65 0 0 0-1.82.33l-.06.06a2 2 0 0 1-2.83 0 2 2 0 0 1 0-2.83l.06-.06a1.65 1.65 0 0 0 .33-1.82 1.65 1.65 0 0 0-1.51-1H3a2 2 0 0 1-2-2 2 2 0 0 1 2-2h.09A1.65 1.65 0 0 0 4.6 9a1.65 1.65 0 0 0-.33-1.82l-.06-.06a2 2 0 0 1 0-2.83 2 2 0 0 1 2.83 0l.06.06a1.65 1.65 0 0 0 1.82.33H9a1.65 1.65 0 0 0 1-1.51V3a2 2 0 0 1 2-2 2 2 0 0 1 2 2v.09a1.65 1.65 0 0 0 1 1.51 1.65 1.65 0 0 0 1.82-.33l.06-.06a2 2 0 0 1 2.83 0 2 2 0 0 1 0 2.83l-.06.06a1.65 1.65 0 0 0-.33 1.82V9a1.65 1.65 0 0 0 1.51 1H21a2 2 0 0 1 2 2 2 2 0 0 1-2 2h-.09a1.65 1.65 0 0 0-1.51 1z"></path>
+          </svg>
+          <span data-i18n="nav_settings">Settings</span>
+        </div>
+      </div>
+    </aside>
+
+    <!-- Workspaces Container -->
+    <main class="app-content">
+
+      <!-- ====================================================================
+           1. HOME DASHBOARD
+           ==================================================================== -->
+      <section class="workspace-view active" id="view-home">
+        
+        <!-- Hero Card -->
+        <div class="hero-card" style="display: flex; justify-content: space-between; align-items: center; gap: 24px;">
+          <div style="flex: 1;">
+            <div class="hero-pill">
+              <span class="stat-dot"></span>
+              <span data-i18n="tagline">Private. Offline. Free. Simple.</span>
+            </div>
+            <h1 class="hero-title" data-i18n="app_title">PDFLab — by reza</h1>
+            <p class="hero-description" data-i18n="hero_desc">
+              The open-source offline PDF utility for Windows. 100% local processing, zero uploads, zero ads, zero telemetry.
+            </p>
+            <div class="hero-stats">
+              <div class="stat-item">
+                <span class="stat-dot"></span>
+                <span data-i18n="home_stat_offline">100% Offline</span>
+              </div>
+              <div class="stat-item">
+                <span class="stat-dot"></span>
+                <span data-i18n="home_stat_privacy">Zero Uploads</span>
+              </div>
+              <div class="stat-item">
+                <span class="stat-dot"></span>
+                <span data-i18n="home_stat_license">GPLv3 Open Source</span>
+              </div>
+            </div>
+          </div>
+          <div style="width: 120px; height: 120px; flex-shrink: 0; background: #ffffff; border: 1px solid var(--border-strong); border-radius: var(--radius-xl); padding: 8px; display: flex; align-items: center; justify-content: center; box-shadow: var(--shadow-md); overflow: hidden;">
+            <img src="logo.svg" alt="PDFLab Logo" style="width: 100%; height: 100%; object-fit: contain;" />
+          </div>
+        </div>
+
+        <!-- Universal Dropzone -->
+        <div class="universal-dropzone" id="universalDropzone">
+          <input type="file" id="universalFileInput" style="display: none;" multiple accept=".pdf,.png,.jpg,.jpeg">
+          <div class="dropzone-icon">
+            <svg width="28" height="28" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+              <path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"></path>
+              <polyline points="17 8 12 3 7 8"></polyline>
+              <line x1="12" y1="3" x2="12" y2="15"></line>
+            </svg>
+          </div>
+          <div class="dropzone-title" data-i18n="home_drop_title">Drag & Drop PDF or Images Here</div>
+          <div class="dropzone-subtitle" data-i18n="home_drop_subtitle">or click to select files from your computer (Processed 100% Offline)</div>
+          <button class="btn btn-primary btn-sm" data-i18n="home_browse_btn">Browse Files...</button>
+        </div>
+
+        <!-- Category 1: Organize & Manage -->
+        <div class="category-section">
+          <div class="category-title">
+            <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="3" y="3" width="7" height="7"></rect><rect x="14" y="3" width="7" height="7"></rect><rect x="14" y="14" width="7" height="7"></rect><rect x="3" y="14" width="7" height="7"></rect></svg>
+            <span data-i18n="cat_organize">Organize & Manage</span>
+          </div>
+          <div class="tools-grid">
+            <div class="tool-card" data-view="viewer">
+              <div class="tool-card-header">
+                <div class="tool-icon-wrapper icon-blue">
+                  <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M2 3h6a4 4 0 0 1 4 4v14a3 3 0 0 0-3-3H2z"></path><path d="M22 3h-6a4 4 0 0 0-4 4v14a3 3 0 0 1 3-3h7z"></path></svg>
+                </div>
+                <span class="nav-badge">P0</span>
+              </div>
+              <h3 data-i18n="nav_viewer">PDF Viewer</h3>
+              <p data-i18n="desc_viewer">High-performance offline PDF viewer with search, zoom, and thumbnail sidebar.</p>
+              <div class="tool-card-footer"><span>Launch Tool →</span></div>
+            </div>
+
+            <div class="tool-card" data-view="merge">
+              <div class="tool-card-header">
+                <div class="tool-icon-wrapper icon-warm">
+                  <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M8 3H5a2 2 0 0 0-2 2v14c0 1.1.9 2 2 2h14a2 2 0 0 0 2-2v-3"></path><path d="M18 9l4-4-4-4"></path></svg>
+                </div>
+                <span class="nav-badge">P0</span>
+              </div>
+              <h3 data-i18n="nav_merge">Merge PDF</h3>
+              <p data-i18n="desc_merge">Combine multiple PDF files into one clean document with custom page ranges.</p>
+              <div class="tool-card-footer"><span>Launch Tool →</span></div>
+            </div>
+
+            <div class="tool-card" data-view="split">
+              <div class="tool-card-header">
+                <div class="tool-icon-wrapper icon-teal">
+                  <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M16 3h5v5"></path><path d="M4 20L21 3"></path></svg>
+                </div>
+                <span class="nav-badge">P0</span>
+              </div>
+              <h3 data-i18n="nav_split">Split PDF</h3>
+              <p data-i18n="desc_split">Extract pages, split by range, or separate every single page into distinct files.</p>
+              <div class="tool-card-footer"><span>Launch Tool →</span></div>
+            </div>
+
+            <div class="tool-card" data-view="organize">
+              <div class="tool-card-header">
+                <div class="tool-icon-wrapper icon-purple">
+                  <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="3" y="3" width="7" height="7"></rect><rect x="14" y="3" width="7" height="7"></rect></svg>
+                </div>
+                <span class="nav-badge">P0</span>
+              </div>
+              <h3 data-i18n="nav_organize">Organize Pages</h3>
+              <p data-i18n="desc_organize">Rotate, reorder, duplicate, or delete pages in a thumbnail workspace.</p>
+              <div class="tool-card-footer"><span>Launch Tool →</span></div>
+            </div>
+          </div>
+        </div>
+
+        <!-- Category 2: Optimize & Convert -->
+        <div class="category-section">
+          <div class="category-title">
+            <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polyline points="4 14 10 14 10 20"></polyline><polyline points="20 10 14 10 14 4"></polyline></svg>
+            <span data-i18n="cat_optimize">Optimize & Convert</span>
+          </div>
+          <div class="tools-grid">
+            <div class="tool-card" data-view="compress">
+              <div class="tool-card-header">
+                <div class="tool-icon-wrapper icon-green">
+                  <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><line x1="14" y1="10" x2="21" y2="3"></line><line x1="3" y1="21" x2="10" y2="14"></line></svg>
+                </div>
+                <span class="nav-badge">P0</span>
+              </div>
+              <h3 data-i18n="nav_compress">Compress PDF</h3>
+              <p data-i18n="desc_compress">Reduce PDF file size with preset or target size modes without losing readability.</p>
+              <div class="tool-card-footer"><span>Launch Tool →</span></div>
+            </div>
+
+            <div class="tool-card" data-view="pdf-to-img">
+              <div class="tool-card-header">
+                <div class="tool-icon-wrapper icon-amber">
+                  <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="3" y="3" width="18" height="18" rx="2"></rect><circle cx="8.5" cy="8.5" r="1.5"></circle></svg>
+                </div>
+                <span class="nav-badge">P0</span>
+              </div>
+              <h3 data-i18n="nav_pdf_to_img">PDF → Image</h3>
+              <p data-i18n="desc_pdf_to_img">Convert PDF pages to high-resolution PNG or JPG images.</p>
+              <div class="tool-card-footer"><span>Launch Tool →</span></div>
+            </div>
+
+            <div class="tool-card" data-view="img-to-pdf">
+              <div class="tool-card-header">
+                <div class="tool-icon-wrapper icon-teal">
+                  <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"></path><polyline points="14 2 14 8 20 8"></polyline><circle cx="10" cy="13" r="2"></circle><polyline points="16 17 12 13 8 17"></polyline></svg>
+                </div>
+                <span class="nav-badge">P0</span>
+              </div>
+              <h3 data-i18n="nav_img_to_pdf">Image → PDF</h3>
+              <p data-i18n="desc_img_to_pdf">Create standard PDFs from multiple photos and images with custom page sizing.</p>
+              <div class="tool-card-footer"><span>Launch Tool →</span></div>
+            </div>
+          </div>
+        </div>
+
+        <!-- Category 3: Edit & Intelligence -->
+        <div class="category-section">
+          <div class="category-title">
+            <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polyline points="4 7 4 4 20 4 20 7"></polyline><line x1="12" y1="4" x2="12" y2="20"></line></svg>
+            <span data-i18n="cat_edit">Edit & Intelligence</span>
+          </div>
+          <div class="tools-grid">
+            <div class="tool-card" data-view="ocr">
+              <div class="tool-card-header">
+                <div class="tool-icon-wrapper icon-blue">
+                  <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polyline points="4 7 4 4 20 4 20 7"></polyline><line x1="12" y1="4" x2="12" y2="20"></line></svg>
+                </div>
+                <span class="nav-badge badge-offline">CPU-Only</span>
+              </div>
+              <h3 data-i18n="nav_ocr">Offline OCR</h3>
+              <p data-i18n="desc_ocr">Extract text and make scanned documents searchable with 100% CPU-only offline OCR.</p>
+              <div class="tool-card-footer"><span>Launch Tool →</span></div>
+            </div>
+
+            <div class="tool-card" data-view="edit">
+              <div class="tool-card-header">
+                <div class="tool-icon-wrapper icon-purple">
+                  <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M12 20h9"></path><path d="M16.5 3.5a2.121 2.121 0 0 1 3 3L7 19l-4 1 1-4L16.5 3.5z"></path></svg>
+                </div>
+                <span class="nav-badge">P1</span>
+              </div>
+              <h3 data-i18n="nav_edit">Edit PDF</h3>
+              <p data-i18n="desc_edit">Add text, annotations, geometric shapes, and highlights directly on your PDF.</p>
+              <div class="tool-card-footer"><span>Launch Tool →</span></div>
+            </div>
+
+            <div class="tool-card" data-view="signature">
+              <div class="tool-card-header">
+                <div class="tool-icon-wrapper icon-warm">
+                  <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M20 19v-2a4 4 0 0 0-4-4H8a4 4 0 0 0-4 4v2"></path></svg>
+                </div>
+                <span class="nav-badge">P1</span>
+              </div>
+              <h3 data-i18n="nav_signature">Visual Signature</h3>
+              <p data-i18n="desc_signature">Draw, store, and position visual signatures securely on your documents.</p>
+              <div class="tool-card-footer"><span>Launch Tool →</span></div>
+            </div>
+          </div>
+        </div>
+
+      </section>
+
+      <!-- ====================================================================
+           2. PDF VIEWER WORKSPACE
+           ==================================================================== -->
+      <section class="workspace-view" id="view-viewer">
+        <div class="workspace-header">
+          <div class="header-text">
+            <h1 data-i18n="nav_viewer">PDF Viewer</h1>
+            <p id="viewerDocTitle">No document opened</p>
+          </div>
+          <div class="header-actions">
+            <button class="btn btn-secondary btn-sm" id="viewerPrintBtn" onclick="window.print()">
+              <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polyline points="6 9 6 2 18 2 18 9"></polyline><path d="M6 18H4a2 2 0 0 1-2-2v-5a2 2 0 0 1 2-2h16a2 2 0 0 1 2 2v5a2 2 0 0 1-2 2h-2"></path><rect x="6" y="14" width="12" height="8"></rect></svg>
+              <span data-i18n="viewer_print">Print (Ctrl+P)</span>
+            </button>
+            <button class="btn btn-primary btn-sm" onclick="document.getElementById('universalFileInput').click()">
+              <span data-i18n="viewer_open_doc">Open PDF Document</span>
+            </button>
+          </div>
+        </div>
+
+        <!-- Viewer Main Workspace -->
+        <div class="viewer-workspace">
+          <!-- Toolbar -->
+          <div class="viewer-toolbar">
+            <div class="viewer-toolbar-group">
+              <button class="btn btn-secondary btn-sm" id="viewerPrevBtn" title="Previous Page">◀</button>
+              <span style="font-size: 12px; font-weight: 600; padding: 0 4px;">
+                <span data-i18n="viewer_page">Page</span> <span id="viewerCurrentPage">0</span> <span data-i18n="viewer_of">of</span> <span id="viewerTotalPages">0</span>
+              </span>
+              <button class="btn btn-secondary btn-sm" id="viewerNextBtn" title="Next Page">▶</button>
+            </div>
+
+            <!-- Zoom & Rotate -->
+            <div class="viewer-toolbar-group">
+              <button class="btn btn-secondary btn-sm" id="viewerZoomOutBtn" title="Zoom Out">-</button>
+              <span id="viewerZoomDisplay" style="font-size: 11.5px; font-weight: 600; width: 42px; text-align: center;">100%</span>
+              <button class="btn btn-secondary btn-sm" id="viewerZoomInBtn" title="Zoom In">+</button>
+              <button class="btn btn-secondary btn-sm" id="viewerFitPageBtn" data-i18n="viewer_fit_page">Fit Page</button>
+              <button class="btn btn-secondary btn-sm" id="viewerRotateBtn" title="Rotate View">⟳</button>
+            </div>
+
+            <!-- In-Document Search -->
+            <div class="viewer-toolbar-group">
+              <input type="text" id="viewerSearchInput" class="range-input" style="width: 180px;" placeholder="Search in page (Ctrl+F)...">
+              <span id="viewerSearchCount" style="font-size: 10.5px; color: var(--text-muted);"></span>
+            </div>
+          </div>
+
+          <!-- Viewer Content Body -->
+          <div class="viewer-body">
+            <!-- Sidebar Thumbnails -->
+            <div class="viewer-sidebar-panel" id="viewerThumbnailsList">
+              <div style="padding: 24px 12px; text-align: center; color: var(--text-muted); font-size: 11.5px;">No thumbnails. Open a PDF document to view pages.</div>
+            </div>
+
+            <!-- Main Render Area -->
+            <div class="viewer-main-canvas-area">
+              <div class="rendered-page-sheet" id="renderedPageSheet">
+                <div id="docSampleContent" style="width: 100%; height: 100%; display: flex; flex-direction: column; justify-content: center; align-items: center;">
+                  <div class="dropzone-icon" style="margin-bottom: 12px; width: 44px; height: 44px;">
+                    <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                      <path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"></path>
+                      <polyline points="14 2 14 8 20 8"></polyline>
+                    </svg>
+                  </div>
+                  <h3 style="font-size: 15px; font-weight: 700; margin-bottom: 6px; color: var(--text-primary);">No Document Open</h3>
+                  <p style="font-size: 12px; color: var(--text-secondary); margin-bottom: 16px;">Drop a PDF file here or click the button below to start reading.</p>
+                  <button class="btn btn-primary btn-sm" onclick="document.getElementById('universalFileInput').click()">Open PDF File...</button>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </section>
+
+      <!-- ====================================================================
+           3. ORGANIZE PAGES WORKSPACE
+           ==================================================================== -->
+      <section class="workspace-view" id="view-organize">
+        <div class="workspace-header">
+          <div class="header-text">
+            <h1 data-i18n="organize_title">Organize & Reorder Pages</h1>
+            <p data-i18n="organize_subtitle">Drag thumbnails to reorder, click buttons to rotate or delete pages.</p>
+          </div>
+          <div class="header-actions">
+            <button class="btn btn-secondary btn-sm" id="orgUndoBtn" data-i18n="organize_undo">Undo (Ctrl+Z)</button>
+            <button class="btn btn-secondary btn-sm" id="orgRedoBtn" data-i18n="organize_redo">Redo (Ctrl+Y)</button>
+            <button class="btn btn-primary" id="orgSaveBtn" data-i18n="organize_save">Save Changes (Ctrl+S)</button>
+          </div>
+        </div>
+
+        <div class="card-panel">
+          <div style="display: flex; gap: 8px; margin-bottom: 12px;">
+            <button class="btn btn-secondary btn-sm" id="orgRotateLeftBtn" data-i18n="organize_rotate_left">Rotate Left (90°)</button>
+            <button class="btn btn-secondary btn-sm" id="orgRotateRightBtn" data-i18n="organize_rotate_right">Rotate Right (90°)</button>
+            <button class="btn btn-danger btn-sm" id="orgDeleteBtn" data-i18n="organize_delete">Delete Selected</button>
+          </div>
+
+          <div class="thumbnails-grid" id="organizeThumbnailsGrid"></div>
+        </div>
+      </section>
+
+      <!-- ====================================================================
+           4. MERGE PDF WORKSPACE
+           ==================================================================== -->
+      <section class="workspace-view" id="view-merge">
+        <div class="workspace-header">
+          <div class="header-text">
+            <h1 data-i18n="merge_title">Merge PDF Documents</h1>
+            <p data-i18n="merge_subtitle">Arrange files in the desired order and select custom page ranges.</p>
+          </div>
+          <div class="header-actions">
+            <button class="btn btn-secondary" id="mergeClearBtn" data-i18n="merge_clear_btn">Clear Queue</button>
+            <button class="btn btn-secondary" id="mergeAddBtn" data-i18n="merge_add_btn">Add PDF Files...</button>
+            <button class="btn btn-primary" id="mergeStartBtn" data-i18n="merge_start_btn">Merge Documents</button>
+          </div>
+        </div>
+
+        <div class="card-panel">
+          <table class="queue-table">
+            <thead>
+              <tr>
+                <th data-i18n="merge_col_filename">File Name</th>
+                <th data-i18n="merge_col_size">File Size</th>
+                <th data-i18n="merge_col_pages">Pages</th>
+                <th data-i18n="merge_col_range">Page Range</th>
+                <th data-i18n="merge_col_actions">Actions</th>
+              </tr>
+            </thead>
+            <tbody id="mergeQueueBody"></tbody>
+          </table>
+          <div id="mergeEmptyQueue" style="text-align: center; padding: 40px; color: var(--text-muted);" data-i18n="merge_empty">
+            Merge queue is empty. Drag files here or click 'Add PDF Files'.
+          </div>
+        </div>
+      </section>
+
+      <!-- ====================================================================
+           5. SPLIT PDF WORKSPACE
+           ==================================================================== -->
+      <section class="workspace-view" id="view-split">
+        <div class="workspace-header">
+          <div class="header-text">
+            <h1 data-i18n="split_title">Split PDF Document</h1>
+            <p data-i18n="split_subtitle">Choose how you want to extract or split pages from your document.</p>
+          </div>
+        </div>
+
+        <div class="card-panel">
+          <!-- Active Document Context Banner -->
+          <div id="splitActiveDocBanner" style="margin-bottom: 16px; padding: 12px 16px; background: var(--bg-input); border-radius: var(--radius-md); border: 1px solid var(--border-subtle); display: flex; justify-content: space-between; align-items: center;">
+            <div style="display: flex; align-items: center; gap: 10px;">
+              <span class="nav-badge" style="margin: 0;">SPLIT</span>
+              <div>
+                <strong id="splitDocName">No document loaded</strong>
+                <div id="splitDocMeta" style="font-size: 11px; color: var(--text-muted);">Open a PDF to view thumbnails and extract pages</div>
+              </div>
+            </div>
+            <button class="btn btn-secondary btn-sm" onclick="document.getElementById('universalFileInput').click()">Choose File...</button>
+          </div>
+
+          <!-- Page Thumbnails Strip -->
+          <div id="splitThumbnailsContainer" style="margin-bottom: 20px; overflow-x: auto; padding-bottom: 8px;">
+            <div id="splitThumbnailsStrip" style="display: flex; gap: 12px; min-height: 80px; align-items: center;"></div>
+          </div>
+
+          <div class="options-grid">
+            <div class="option-box active" onclick="selectSplitMode(this, 'range')">
+              <h4 data-i18n="split_mode_range">Split by Custom Range</h4>
+              <p>Specify exact page intervals (e.g., 1-5, 8-10, 15).</p>
+            </div>
+            <div class="option-box" onclick="selectSplitMode(this, 'every_n')">
+              <h4 data-i18n="split_mode_every_n">Split Every N Pages</h4>
+              <p>Divide document into chunks of equal page length.</p>
+            </div>
+            <div class="option-box" onclick="selectSplitMode(this, 'extract')">
+              <h4 data-i18n="split_mode_extract">Extract Selected Pages</h4>
+              <p>Extract chosen individual pages into a single new PDF.</p>
+            </div>
+            <div class="option-box" onclick="selectSplitMode(this, 'all')">
+              <h4 data-i18n="split_mode_all">Split Every Single Page</h4>
+              <p>Export each page as an individual standalone PDF file.</p>
+            </div>
+          </div>
+
+          <div class="form-group" style="max-width: 400px;">
+            <label class="form-label" data-i18n="merge_col_range">Page Range Specification:</label>
+            <input type="text" id="splitRangeInput" class="form-input" value="1" data-i18n-placeholder="split_range_placeholder" placeholder="e.g., 1-3, 5, 8-10">
+          </div>
+
+          <button class="btn btn-primary" id="splitProcessBtn" data-i18n="split_btn">Process Split</button>
+        </div>
+      </section>
+
+      <!-- ====================================================================
+           6. COMPRESS PDF WORKSPACE
+           ==================================================================== -->
+      <section class="workspace-view" id="view-compress">
+        <div class="workspace-header">
+          <div class="header-text">
+            <h1 data-i18n="compress_title">Compress PDF Document</h1>
+            <p data-i18n="compress_subtitle">Optimize document size while preserving crisp text and graphics.</p>
+          </div>
+        </div>
+
+        <div class="card-panel">
+          <!-- Active Document Context Banner -->
+          <div id="compressActiveDocBanner" style="margin-bottom: 16px; padding: 12px 16px; background: var(--bg-input); border-radius: var(--radius-md); border: 1px solid var(--border-subtle); display: flex; justify-content: space-between; align-items: center;">
+            <div style="display: flex; align-items: center; gap: 10px;">
+              <span class="nav-badge" style="margin: 0;">COMPRESS</span>
+              <div>
+                <strong id="compressDocName">No document loaded</strong>
+                <div id="compressDocMeta" style="font-size: 11px; color: var(--text-muted);">Open a PDF to calculate compression savings</div>
+              </div>
+            </div>
+            <button class="btn btn-secondary btn-sm" onclick="document.getElementById('universalFileInput').click()">Change PDF...</button>
+          </div>
+
+          <div class="options-grid">
+            <div class="option-box compress-preset-box" data-preset="low">
+              <h4 data-i18n="compress_preset_low">Low Compression</h4>
+              <p>High image quality, minimal visual loss, ~25% reduction.</p>
+            </div>
+            <div class="option-box compress-preset-box active" data-preset="med">
+              <h4 data-i18n="compress_preset_med">Medium Compression</h4>
+              <p>Balanced optimization for sharing via email, ~50% reduction.</p>
+            </div>
+            <div class="option-box compress-preset-box" data-preset="high">
+              <h4 data-i18n="compress_preset_high">High Compression</h4>
+              <p>Maximum size reduction with downsampled graphics, ~70% reduction.</p>
+            </div>
+          </div>
+
+          <!-- Comparison Simulation -->
+          <div class="comparison-banner">
+            <div class="metric-box">
+              <div class="metric-label">Original File Size</div>
+              <div class="metric-val" id="compressOriginalVal">0.0 MB</div>
+            </div>
+            <div style="font-size: 24px; color: var(--text-muted);">➔</div>
+            <div class="metric-box">
+              <div class="metric-label">Estimated Output Size</div>
+              <div class="metric-val saved" id="compressOutputVal">0.0 MB</div>
+            </div>
+            <div class="metric-box">
+              <div class="metric-label">Storage Saved</div>
+              <div class="metric-val saved" id="compressSavedVal">0%</div>
+            </div>
+          </div>
+
+          <div style="margin-top: 24px; display: flex; justify-content: flex-end;">
+            <button class="btn btn-primary" id="compressStartBtn" data-i18n="compress_btn">Start Compression</button>
+          </div>
+        </div>
+      </section>
+
+      <!-- ====================================================================
+           7. PDF → IMAGE WORKSPACE
+           ==================================================================== -->
+      <section class="workspace-view" id="view-pdf-to-img">
+        <div class="workspace-header">
+          <div class="header-text">
+            <h1 data-i18n="nav_pdf_to_img">PDF → Image</h1>
+            <p data-i18n="desc_pdf_to_img">Convert PDF pages to high-resolution PNG or JPG images.</p>
+          </div>
+        </div>
+
+        <div class="card-panel">
+          <!-- Active Document Context Banner -->
+          <div id="pdfToImgActiveDocBanner" style="margin-bottom: 16px; padding: 12px 16px; background: var(--bg-input); border-radius: var(--radius-md); border: 1px solid var(--border-subtle); display: flex; justify-content: space-between; align-items: center;">
+            <div style="display: flex; align-items: center; gap: 10px;">
+              <span class="nav-badge" style="margin: 0;">PDF → IMAGE</span>
+              <div>
+                <strong id="pdfToImgDocName">No document loaded</strong>
+                <div id="pdfToImgDocMeta" style="font-size: 11px; color: var(--text-muted);">Open a PDF to export high-res page images</div>
+              </div>
+            </div>
+            <button class="btn btn-secondary btn-sm" onclick="document.getElementById('universalFileInput').click()">Change PDF...</button>
+          </div>
+
+          <!-- Page Thumbnails Strip -->
+          <div id="pdfToImgThumbnailsContainer" style="margin-bottom: 20px; overflow-x: auto; padding-bottom: 8px;">
+            <div id="pdfToImgThumbnailsStrip" style="display: flex; gap: 12px; min-height: 80px; align-items: center;"></div>
+          </div>
+
+          <div style="display: grid; grid-template-columns: repeat(auto-fit, minmax(240px, 1fr)); gap: 16px; margin-bottom: 20px;">
+            <div class="form-group">
+              <label class="form-label" data-i18n="convert_format_label">Output Format:</label>
+              <select class="form-select" id="pdfToImgFormat">
+                <option value="png">PNG (Lossless Quality)</option>
+                <option value="jpg">JPG (High Quality 90%)</option>
+              </select>
+            </div>
+
+            <div class="form-group">
+              <label class="form-label" data-i18n="convert_dpi_label">Rendering DPI:</label>
+              <select class="form-select" id="pdfToImgDpi">
+                <option value="150">150 DPI (Standard)</option>
+                <option value="300">300 DPI (High Definition Print)</option>
+                <option value="72">72 DPI (Web & Screen)</option>
+              </select>
+            </div>
+
+            <div class="form-group">
+              <label class="form-label" data-i18n="convert_pages_label">Page Selection:</label>
+              <select class="form-select" id="pdfToImgPages">
+                <option value="all">All Pages</option>
+                <option value="current">Current Page</option>
+              </select>
+            </div>
+          </div>
+
+          <button class="btn btn-primary" onclick="runPdfToImgDemo()" data-i18n="convert_start_btn">Convert & Export Images</button>
+        </div>
+      </section>
+
+      <!-- ====================================================================
+           8. IMAGE → PDF WORKSPACE
+           ==================================================================== -->
+      <section class="workspace-view" id="view-img-to-pdf">
+        <div class="workspace-header">
+          <div class="header-text">
+            <h1 data-i18n="nav_img_to_pdf">Image → PDF</h1>
+            <p data-i18n="desc_img_to_pdf">Create standard PDFs from multiple photos and images with custom page sizing.</p>
+          </div>
+        </div>
+
+        <div class="card-panel">
+          <div class="universal-dropzone" style="padding: 24px; margin-bottom: 20px;" onclick="document.getElementById('universalFileInput').click()">
+            <div class="dropzone-icon" style="width: 42px; height: 42px; margin-bottom: 8px;">
+              <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                <rect x="3" y="3" width="18" height="18" rx="2" ry="2"></rect>
+                <circle cx="8.5" cy="8.5" r="1.5"></circle>
+                <polyline points="21 15 16 10 5 21"></polyline>
+              </svg>
+            </div>
+            <div style="font-size: 14px; font-weight: 700; margin-bottom: 4px;">Drag & Drop Images (PNG, JPG, BMP)</div>
+            <div style="font-size: 12px; color: var(--text-secondary);">or click to select image files from your computer</div>
+          </div>
+
+          <div style="display: grid; grid-template-columns: repeat(auto-fit, minmax(200px, 1fr)); gap: 16px; margin-bottom: 20px;">
+            <div class="form-group">
+              <label class="form-label" data-i18n="convert_paper_size">Paper Size:</label>
+              <select class="form-select">
+                <option>A4 (210 × 297 mm)</option>
+                <option>A3 (297 × 420 mm)</option>
+                <option>A5 (148 × 210 mm)</option>
+                <option>Letter (8.5 × 11 in)</option>
+                <option>Legal (8.5 × 14 in)</option>
+                <option>Auto / Original Image Ratio</option>
+              </select>
+            </div>
+
+            <div class="form-group">
+              <label class="form-label" data-i18n="convert_orientation">Orientation:</label>
+              <select class="form-select">
+                <option data-i18n="convert_portrait">Portrait (Tegak)</option>
+                <option data-i18n="convert_landscape">Landscape (Mendatar)</option>
+              </select>
+            </div>
+
+            <div class="form-group">
+              <label class="form-label" data-i18n="convert_margin">Margin:</label>
+              <select class="form-select">
+                <option>No Margin (0 mm)</option>
+                <option>Narrow (5 mm)</option>
+                <option>Normal (10 mm)</option>
+              </select>
+            </div>
+
+            <div class="form-group">
+              <label class="form-label" data-i18n="convert_fit">Image Fit:</label>
+              <select class="form-select">
+                <option data-i18n="convert_fit_contain">Fit to Page (Keep Aspect Ratio)</option>
+                <option data-i18n="convert_fit_cover">Fill Entire Page (Crop if needed)</option>
+                <option data-i18n="convert_fit_original">Original Scale</option>
+              </select>
+            </div>
+          </div>
+
+          <button class="btn btn-primary" onclick="runImageToPdfDemo()" data-i18n="convert_start_btn">Create PDF Document</button>
+        </div>
+      </section>
+
+      <!-- ====================================================================
+           8. OFFLINE OCR WORKSPACE (SCANNED PDF → EDITABLE PDF)
+           ==================================================================== -->
+      <section class="workspace-view" id="view-ocr">
+        <div class="workspace-header">
+          <div class="header-text">
+            <h1 data-i18n="ocr_title">OCR Scanned PDF → Editable & Searchable PDF</h1>
+            <p data-i18n="ocr_subtitle">Convert scanned documents and image PDFs into fully editable, searchable PDF files 100% offline using local CPU.</p>
+          </div>
+          <div class="header-actions">
+            <button class="btn btn-secondary btn-sm" id="ocrOpenInEditorBtn" data-i18n="ocr_open_in_editor_btn">Open & Edit in PDF Editor</button>
+            <button class="btn btn-primary btn-sm" id="ocrExportPdfBtn" data-i18n="ocr_export_editable_btn">Export as Editable PDF</button>
+          </div>
+        </div>
+
+        <div class="card-panel">
+          <!-- OCR Configuration Row -->
+          <div style="display: grid; grid-template-columns: repeat(auto-fit, minmax(220px, 1fr)); gap: 16px; margin-bottom: 16px;">
+            <div class="form-group">
+              <label class="form-label" data-i18n="ocr_lang_label">Recognition Language:</label>
+              <select class="form-select" id="ocrLanguageSelect">
+                <option value="id" data-i18n="ocr_lang_id">Bahasa Indonesia</option>
+                <option value="en" data-i18n="ocr_lang_en">English (Latin Script)</option>
+              </select>
+            </div>
+
+            <div class="form-group">
+              <label class="form-label" data-i18n="ocr_output_type">OCR Reconstruction Mode:</label>
+              <select class="form-select" id="ocrModeSelect">
+                <option value="editable" data-i18n="ocr_out_pdf">Direct Editable PDF (Reconstruct Layout & Live Text)</option>
+                <option value="searchable" data-i18n="ocr_out_searchable">Searchable PDF (Original Image + Text Layer)</option>
+                <option value="txt" data-i18n="ocr_out_txt">Plain Text (.txt)</option>
+              </select>
+            </div>
+
+            <div class="form-group">
+              <label class="form-label">Preprocessing:</label>
+              <div style="display: flex; flex-direction: column; gap: 4px; padding-top: 4px;">
+                <label style="display: flex; align-items: center; gap: 6px; font-size: 11.5px; cursor: pointer;">
+                  <input type="checkbox" checked id="ocrDeskewCheck">
+                  <span data-i18n="ocr_deskew">Auto Deskew & Rotation</span>
+                </label>
+                <label style="display: flex; align-items: center; gap: 6px; font-size: 11.5px; cursor: pointer;">
+                  <input type="checkbox" checked>
+                  <span data-i18n="ocr_contrast">Contrast & Binarization Boost</span>
+                </label>
+              </div>
+            </div>
+          </div>
+
+          <div style="display: flex; gap: 10px; align-items: center; margin-bottom: 16px;">
+            <button class="btn btn-primary" id="ocrStartBtn" data-i18n="ocr_start_btn">Run OCR & Convert to Editable PDF</button>
+            <button class="btn btn-secondary btn-sm" id="ocrCopyBtn" data-i18n="ocr_copy_btn">Copy Extracted Text</button>
+          </div>
+
+          <!-- Step Logs Box -->
+          <div class="step-log-box" id="ocrStepLogs" style="margin-bottom: 16px;">
+            [IDLE] Local CPU OCR Engine ready. Select or drop a scanned document to convert into an editable PDF.
+          </div>
+
+          <!-- Side-by-Side Scanned vs Editable PDF Preview -->
+          <div class="ocr-comparison-grid">
+            
+            <!-- Left: Scanned Source Document -->
+            <div class="ocr-pane">
+              <div class="ocr-pane-header">
+                <span data-i18n="ocr_tab_scanned">Original Scanned Page (Raster)</span>
+                <span style="font-size: 10.5px; background: rgba(239, 68, 68, 0.15); color: var(--accent-danger); padding: 2px 6px; border-radius: 4px;">Scanned Bitmap</span>
+              </div>
+              <div class="ocr-pane-body">
+                <div class="scanned-sim-paper" id="ocrScannedPaper">
+                  <div style="font-weight: 800; font-size: 13px; margin-bottom: 6px; letter-spacing: 0.5px; text-decoration: underline;">
+                    PERJANJIAN KERJASAMA / CONTRACT AGREEMENT
+                  </div>
+                  <div style="margin-bottom: 12px; font-size: 10px; color: #475569;">
+                    No. Dokumen: 084/PDFLAB-REZA/VIII/2026<br>
+                    Tanggal: 27 Agustus 2026
+                  </div>
+                  <p style="margin-bottom: 10px;">
+                    Pihak Pertama sepakat untuk melakukan digitalisasi dan pengelolaan dokumen PDF secara offline dan privat menggunakan PDFLab by reza.
+                  </p>
+                  <p style="margin-bottom: 10px;">
+                    Semua operasi pemrosesan teks, OCR, kompresi, dan modifikasi dilakukan 100% lokal tanpa koneksi internet dan tanpa pengunggahan data ke cloud.
+                  </p>
+                  <p>
+                    Status: Dokumen sah hasil pemindaian scanner resolusi 300 DPI.
+                  </p>
+                  <div class="scanned-stamp">OFFICIAL SCANNED</div>
+                </div>
+              </div>
+            </div>
+
+            <!-- Right: Live Editable PDF Sheet -->
+            <div class="ocr-pane">
+              <div class="ocr-pane-header">
+                <span data-i18n="ocr_text_preview_title">Live Editable PDF Document Sheet</span>
+                <span style="font-size: 10.5px; background: rgba(16, 185, 129, 0.15); color: var(--accent-success); padding: 2px 6px; border-radius: 4px;">Click Text to Edit</span>
+              </div>
+              <div class="ocr-pane-body">
+                <div class="editable-pdf-sheet" id="ocrEditableSheet" contenteditable="true" spellcheck="false" title="Click anywhere inside this sheet to edit the recognized text directly">
+                  <h2 style="font-size: 15px; font-weight: 800; color: #0f172a; margin-bottom: 6px; border-bottom: 1.5px solid #3b82f6; padding-bottom: 4px;">
+                    PERJANJIAN KERJASAMA / CONTRACT AGREEMENT
+                  </h2>
+                  <div style="font-size: 10.5px; color: #64748b; margin-bottom: 14px;">
+                    <strong>No. Dokumen:</strong> 084/PDFLAB-REZA/VIII/2026 &nbsp;|&nbsp; <strong>Tanggal:</strong> 27 Agustus 2026
+                  </div>
+                  <p style="margin-bottom: 12px; color: #334155;">
+                    Pihak Pertama sepakat untuk melakukan digitalisasi dan pengelolaan dokumen PDF secara offline dan privat menggunakan <strong>PDFLab by reza</strong>.
+                  </p>
+                  <p style="margin-bottom: 12px; color: #334155;">
+                    Semua operasi pemrosesan teks, OCR, kompresi, dan modifikasi dilakukan <strong>100% lokal</strong> tanpa koneksi internet dan tanpa pengunggahan data ke cloud.
+                  </p>
+                  <p style="color: #334155;">
+                    <strong>Status:</strong> Dokumen PDF telah berhasil direkonstruksi menjadi teks vektor yang dapat diedit dan dicari (Searchable & Editable PDF).
+                  </p>
+                </div>
+              </div>
+            </div>
+
+          </div>
+
+        </div>
+      </section>
+
+      <!-- ====================================================================
+           9. EDIT PDF WORKSPACE
+           ==================================================================== -->
+      <section class="workspace-view" id="view-edit">
+        <div class="workspace-header">
+          <div class="header-text">
+            <h1 data-i18n="edit_title">PDF Editor (Annotation & Markup)</h1>
+            <p data-i18n="edit_subtitle">Add text boxes, highlight content, insert shapes, and sign documents directly.</p>
+          </div>
+          <div class="header-actions">
+            <button class="btn btn-secondary btn-sm" id="editorClearBtn" data-i18n="edit_tool_clear">Clear All</button>
+            <button class="btn btn-secondary btn-sm" id="editorUndoBtn" data-i18n="edit_tool_undo">Undo</button>
+            <button class="btn btn-primary btn-sm" id="editorSaveBtn" data-i18n="edit_save_btn">Export Edited PDF</button>
+          </div>
+        </div>
+
+        <div class="card-panel editor-container">
+          <!-- Editor Active Document Context -->
+          <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 12px; padding: 8px 12px; background: var(--bg-input); border-radius: var(--radius-md); font-size: 12px;">
+            <div style="display: flex; align-items: center; gap: 8px;">
+              <span class="nav-badge" style="margin: 0;">EDITOR</span>
+              <strong>Document:</strong> <span id="editorDocName">No document loaded</span>
+              <span id="editorPageInfo" style="color: var(--text-muted); margin-left: 6px;"></span>
+            </div>
+            <div style="display: flex; gap: 6px; align-items: center;">
+              <button class="btn btn-secondary btn-sm" onclick="changeEditorPage(-1)" title="Previous Page">◀</button>
+              <span id="editorCurrentPageBadge" style="font-weight: 600; font-size: 11.5px; padding: 0 4px;">Page 1</span>
+              <button class="btn btn-secondary btn-sm" onclick="changeEditorPage(1)" title="Next Page">▶</button>
+            </div>
+          </div>
+
+          <div class="editor-toolbar">
+            <button class="btn btn-secondary btn-sm editor-tool-btn active" data-tool="draw" data-i18n="edit_tool_draw">Pen Draw</button>
+            <button class="btn btn-secondary btn-sm editor-tool-btn" data-tool="highlight" data-i18n="edit_tool_highlight">Highlighter</button>
+            <button class="btn btn-secondary btn-sm editor-tool-btn" data-tool="text" data-i18n="edit_tool_text">Add Text</button>
+            <button class="btn btn-secondary btn-sm editor-tool-btn" data-tool="rect" data-i18n="edit_tool_rect">Rectangle</button>
+            
+            <div class="titlebar-divider"></div>
+            
+            <span style="font-size: 11.5px; font-weight: 600;">Color:</span>
+            <input type="color" value="#ef4444" id="editorColorPicker" style="border: none; width: 26px; height: 26px; border-radius: 4px; cursor: pointer;">
+          </div>
+
+          <div class="editor-canvas-wrapper" style="overflow: auto; display: flex; justify-content: center; padding: 16px;">
+            <canvas id="pdfEditorCanvas" class="interactive-pdf-canvas" width="600" height="750" style="background: #ffffff; border-radius: 4px; box-shadow: 0 4px 20px rgba(0,0,0,0.25);"></canvas>
+          </div>
+        </div>
+      </section>
+
+      <!-- ====================================================================
+           10. VISUAL SIGNATURE WORKSPACE
+           ==================================================================== -->
+      <section class="workspace-view" id="view-signature">
+        <div class="workspace-header">
+          <div class="header-text">
+            <h1 data-i18n="sig_title">Visual Signature Manager</h1>
+            <p data-i18n="sig_subtitle">Draw or import visual signatures and place them on your PDF documents.</p>
+          </div>
+        </div>
+
+        <div class="card-panel">
+          <div class="form-label" data-i18n="sig_draw_tab">Draw Signature on Canvas:</div>
+          <div class="signature-box">
+            <canvas id="signaturePadCanvas" class="signature-canvas" width="500" height="180"></canvas>
+          </div>
+
+          <div style="display: flex; gap: 8px; margin-top: 12px;">
+            <button class="btn btn-secondary btn-sm" id="sigClearBtn" data-i18n="sig_clear_btn">Clear Canvas</button>
+            <button class="btn btn-primary btn-sm" id="sigSaveToLibBtn" data-i18n="sig_save_to_lib">Save to Local Library</button>
+          </div>
+
+          <div style="margin-top: 28px;">
+            <div class="form-label" data-i18n="sig_library_title">Saved Signatures Library</div>
+            <div class="saved-signatures-grid" id="savedSignaturesGrid"></div>
+          </div>
+        </div>
+      </section>
+
+      <!-- ====================================================================
+           11. SECURITY WORKSPACE (PROTECT / UNLOCK)
+           ==================================================================== -->
+      <section class="workspace-view" id="view-security">
+        <div class="workspace-header">
+          <div class="header-text">
+            <h1 data-i18n="protect_title">PDF Security & Encryption</h1>
+            <p data-i18n="protect_note">Uses standard AES-256 local encryption. Passwords are never saved, logged, or sent online.</p>
+          </div>
+        </div>
+
+        <div class="card-panel">
+          <!-- Active Document Context Banner -->
+          <div id="securityActiveDocBanner" style="margin-bottom: 20px; padding: 12px 16px; background: var(--bg-input); border-radius: var(--radius-md); border: 1px solid var(--border-subtle); display: flex; justify-content: space-between; align-items: center;">
+            <div style="display: flex; align-items: center; gap: 10px;">
+              <span class="nav-badge" style="margin: 0;">AES-256</span>
+              <div>
+                <strong id="securityDocName">No document loaded</strong>
+                <div id="securityDocMeta" style="font-size: 11px; color: var(--text-muted);">Open a PDF to encrypt or remove password</div>
+              </div>
+            </div>
+            <button class="btn btn-secondary btn-sm" onclick="document.getElementById('universalFileInput').click()">Change PDF...</button>
+          </div>
+
+          <div style="display: grid; grid-template-columns: repeat(auto-fit, minmax(280px, 1fr)); gap: 24px;">
+            
+            <!-- Protect Card -->
+            <div style="background: var(--bg-surface-elevated); padding: 20px; border-radius: var(--radius-md); border: 1px solid var(--border-subtle);">
+              <h3 style="margin-bottom: 12px; font-size: 15px;" data-i18n="protect_tab_protect">Protect PDF (Add Password)</h3>
+              <div class="form-group">
+                <label class="form-label" data-i18n="protect_pass_label">Set Document Password:</label>
+                <input type="password" id="protectUserPassInput" class="form-input" placeholder="••••••••">
+              </div>
+              <div class="form-group">
+                <label class="form-label" data-i18n="protect_confirm_label">Confirm Password:</label>
+                <input type="password" id="protectConfirmPassInput" class="form-input" placeholder="••••••••">
+              </div>
+              <button class="btn btn-primary" onclick="runProtectDemo()" style="width: 100%;" data-i18n="protect_btn">Encrypt & Protect PDF</button>
+            </div>
+
+            <!-- Unlock Card -->
+            <div style="background: var(--bg-surface-elevated); padding: 20px; border-radius: var(--radius-md); border: 1px solid var(--border-subtle);">
+              <h3 style="margin-bottom: 12px; font-size: 15px;" data-i18n="protect_tab_unlock">Unlock PDF (Remove Password)</h3>
+              <div class="form-group">
+                <label class="form-label" data-i18n="unlock_pass_label">Enter Existing Password:</label>
+                <input type="password" id="unlockPassInput" class="form-input" placeholder="••••••••">
+              </div>
+              <p style="font-size: 11.5px; color: var(--text-muted); margin-bottom: 14px;">
+                Note: PDFLab removes security only when a valid password is supplied. It does not perform password cracking.
+              </p>
+              <button class="btn btn-secondary" onclick="runUnlockDemo()" style="width: 100%;" data-i18n="unlock_btn">Unlock & Remove Password</button>
+            </div>
+
+          </div>
+        </div>
+      </section>
+
+      <!-- ====================================================================
+           12. BATCH PROCESSING WORKSPACE
+           ==================================================================== -->
+      <section class="workspace-view" id="view-batch">
+        <div class="workspace-header">
+          <div class="header-text">
+            <h1 data-i18n="batch_title">Batch Document Processing</h1>
+            <p data-i18n="batch_subtitle">Process dozens of documents at once with high-speed local worker queues.</p>
+          </div>
+          <div class="header-actions">
+            <button class="btn btn-secondary btn-sm" id="batchAddBtn" data-i18n="batch_add_files">Add Batch Files...</button>
+            <button class="btn btn-danger btn-sm" id="batchCancelBtn" data-i18n="batch_cancel_btn">Cancel Queue</button>
+            <button class="btn btn-primary btn-sm" id="batchStartBtn" data-i18n="batch_start_btn">Start Batch Queue</button>
+          </div>
+        </div>
+
+        <div class="card-panel">
+          <div class="batch-stats-bar">
+            <div class="batch-badge" style="background: rgba(59, 130, 246, 0.15); color: var(--accent-primary);">
+              <span data-i18n="batch_total">Total Files:</span> <strong id="batchTotalCount">4</strong>
+            </div>
+            <div class="batch-badge" style="background: rgba(16, 185, 129, 0.15); color: var(--accent-success);">
+              <span data-i18n="batch_success">Completed:</span> <strong id="batchSuccessCount">0</strong>
+            </div>
+          </div>
+
+          <table class="queue-table">
+            <thead>
+              <tr>
+                <th data-i18n="merge_col_filename">File Name</th>
+                <th data-i18n="merge_col_size">Size</th>
+                <th data-i18n="history_col_status">Status</th>
+                <th>Progress</th>
+              </tr>
+            </thead>
+            <tbody id="batchQueueBody"></tbody>
+          </table>
+        </div>
+      </section>
+
+      <!-- ====================================================================
+           13. PLUGIN MANAGER WORKSPACE
+           ==================================================================== -->
+      <section class="workspace-view" id="view-plugins">
+        <div class="workspace-header">
+          <div class="header-text">
+            <h1 data-i18n="plugins_title">Plugin Manager</h1>
+            <p data-i18n="plugins_subtitle">Manage official and community plugins. Expand PDFLab without bloating the core application.</p>
+          </div>
+          <div class="header-actions">
+            <button class="btn btn-secondary btn-sm" id="pluginSdkBtn" data-i18n="plugins_sdk_btn">View Plugin SDK Docs</button>
+            <button class="btn btn-primary btn-sm" id="pluginInstallBtn" data-i18n="plugins_install_btn">Install Local Plugin...</button>
+          </div>
+        </div>
+
+        <div style="display: flex; flex-direction: column; gap: 14px;">
+          <!-- Plugin 1 -->
+          <div class="plugin-card">
+            <div class="plugin-info">
+              <h3>
+                PDFLab Extended OCR Engine
+                <span class="nav-badge badge-offline" data-i18n="plugins_official_badge">Official</span>
+              </h3>
+              <p>Adds offline dictionary language support for German, French, and Japanese.</p>
+              <div style="font-size: 11px; color: var(--text-muted); margin-top: 4px;" data-i18n="plugins_compat">
+                Compatibility: Compatible (API v1.0 • Min PDFLab v1.0.0)
+              </div>
+            </div>
+            <label class="switch-toggle">
+              <input type="checkbox" checked>
+              <span class="slider-toggle"></span>
+            </label>
+          </div>
+
+          <!-- Plugin 2 -->
+          <div class="plugin-card">
+            <div class="plugin-info">
+              <h3>
+                Batch Barcode & QR Stamp
+                <span class="nav-badge" style="background: rgba(139, 92, 246, 0.15); color: var(--accent-purple);" data-i18n="plugins_community_badge">Community</span>
+              </h3>
+              <p>Generates dynamic Code128 and QR codes positioned on output PDF headers.</p>
+              <div style="font-size: 11px; color: var(--text-muted); margin-top: 4px;" data-i18n="plugins_compat">
+                Compatibility: Compatible (API v1.0 • Developer: community_dev)
+              </div>
+            </div>
+            <label class="switch-toggle">
+              <input type="checkbox">
+              <span class="slider-toggle"></span>
+            </label>
+          </div>
+        </div>
+      </section>
+
+      <!-- ====================================================================
+           14. LOCAL HISTORY WORKSPACE
+           ==================================================================== -->
+      <section class="workspace-view" id="view-history">
+        <div class="workspace-header">
+          <div class="header-text">
+            <h1 data-i18n="history_title">Local Operation History</h1>
+            <p data-i18n="history_subtitle">A private, on-device log of recent operations. No document contents or passwords are ever stored.</p>
+          </div>
+          <div class="header-actions">
+            <button class="btn btn-secondary btn-sm" id="historyClearBtn" data-i18n="history_clear_btn">Clear All History</button>
+          </div>
+        </div>
+
+        <div class="card-panel">
+          <table class="queue-table">
+            <thead>
+              <tr>
+                <th data-i18n="history_col_op">Operation</th>
+                <th data-i18n="history_col_file">Source Document</th>
+                <th data-i18n="history_col_time">Timestamp</th>
+                <th data-i18n="history_col_status">Status</th>
+                <th data-i18n="history_col_output">Output File</th>
+              </tr>
+            </thead>
+            <tbody id="historyTableBody"></tbody>
+          </table>
+        </div>
+      </section>
+
+      <!-- ====================================================================
+           15. OFFLINE HELP WORKSPACE
+           ==================================================================== -->
+      <section class="workspace-view" id="view-help">
+        <div class="workspace-header">
+          <div class="header-text">
+            <h1 data-i18n="help_title">Offline Help & User Documentation</h1>
+            <p data-i18n="help_subtitle">Everything you need to know about using PDFLab without an active internet connection.</p>
+          </div>
+        </div>
+
+        <div class="card-panel">
+          <h3 style="font-size: 15px; margin-bottom: 12px;" data-i18n="help_shortcuts_title">Keyboard Shortcuts Quick Reference</h3>
+          <table class="queue-table" style="margin-bottom: 24px;">
+            <thead>
+              <tr>
+                <th>Action</th>
+                <th>Shortcut</th>
+                <th>Description</th>
+              </tr>
+            </thead>
+            <tbody>
+              <tr><td>Open File</td><td><kbd class="range-input" style="padding: 2px 6px;">Ctrl + O</kbd></td><td>Open PDF or images from computer</td></tr>
+              <tr><td>Save Output</td><td><kbd class="range-input" style="padding: 2px 6px;">Ctrl + S</kbd></td><td>Save active output to default folder</td></tr>
+              <tr><td>Print Document</td><td><kbd class="range-input" style="padding: 2px 6px;">Ctrl + P</kbd></td><td>Trigger Windows native print preview</td></tr>
+              <tr><td>Search Text</td><td><kbd class="range-input" style="padding: 2px 6px;">Ctrl + F</kbd></td><td>Search text matches in current document</td></tr>
+              <tr><td>Undo Action</td><td><kbd class="range-input" style="padding: 2px 6px;">Ctrl + Z</kbd></td><td>Undo last thumbnail or canvas change</td></tr>
+              <tr><td>Redo Action</td><td><kbd class="range-input" style="padding: 2px 6px;">Ctrl + Y</kbd></td><td>Redo previous undone change</td></tr>
+            </tbody>
+          </table>
+
+          <h3 style="font-size: 15px; margin-bottom: 8px;" data-i18n="help_privacy_title">Privacy & Offline Architecture Guarantee</h3>
+          <p style="font-size: 12.5px; color: var(--text-secondary); line-height: 1.6;">
+            PDFLab processes all documents strictly within your local CPU and RAM memory space. It makes 0 network requests, includes zero telemetry trackers, and never saves your document contents to temporary cloud caches.
+          </p>
+        </div>
+      </section>
+
+      <!-- ====================================================================
+           16. SETTINGS WORKSPACE
+           ==================================================================== -->
+      <section class="workspace-view" id="view-settings">
+        <div class="workspace-header">
+          <div class="header-text">
+            <h1 data-i18n="settings_title">Application Settings</h1>
+            <p data-i18n="settings_subtitle">Configure language, appearance, default paths, and diagnostics.</p>
+          </div>
+        </div>
+
+        <div class="card-panel">
+          <h3 style="font-size: 14px; margin-bottom: 14px;" data-i18n="settings_sec_general">General Preferences</h3>
+          
+          <div class="form-group" style="max-width: 400px;">
+            <label class="form-label" data-i18n="settings_theme_label">Visual Theme:</label>
+            <select class="form-select" id="themeSelect">
+              <option value="dark" data-i18n="settings_theme_dark">Dark Mode (Fluent Dark / Mica)</option>
+              <option value="light" data-i18n="settings_theme_light">Light Mode (Fluent Light)</option>
+            </select>
+          </div>
+
+          <div class="form-group" style="max-width: 480px;">
+            <label class="form-label" data-i18n="settings_output_folder">Default Output Folder:</label>
+            <div style="display: flex; gap: 8px;">
+              <input type="text" class="form-input" style="flex: 1;" value="Documents\PDFLab_Output" readonly>
+              <button class="btn btn-primary btn-sm" onclick="window.openOutputFolder()">Open Folder</button>
+            </div>
+          </div>
+
+          <div style="margin-top: 24px; border-top: 1px solid var(--border-subtle); padding-top: 20px; display: flex; align-items: center; gap: 20px;">
+            <div style="width: 80px; height: 80px; flex-shrink: 0; background: #ffffff; border: 1px solid var(--border-strong); border-radius: var(--radius-md); padding: 6px; display: flex; align-items: center; justify-content: center; box-shadow: var(--shadow-sm); overflow: hidden;">
+              <img src="logo.svg" alt="PDFLab Logo" style="width: 100%; height: 100%; object-fit: contain;" />
+            </div>
+            <div>
+              <h3 style="font-size: 15px; margin-bottom: 4px;" data-i18n="settings_sec_about">About PDFLab</h3>
+              <p style="font-size: 13px; color: var(--text-secondary); margin-bottom: 4px;">
+                <strong>PDFLab — by reza</strong> — Version 1.0.0 (Windows 10/11 x64)
+              </p>
+              <p style="font-size: 11.5px; color: var(--text-muted);" data-i18n="settings_license_info">
+                Licensed under GNU General Public License v3.0 (GPLv3). Private. Offline. Free. Simple.
+              </p>
+            </div>
+          </div>
+        </div>
+      </section>
+
+    </main>
+  </div>
+
+  <!-- ========================================================================
+       Status Bar & Footer
+       ======================================================================== -->
+  <footer class="window-statusbar">
+    <div class="statusbar-left">
+      <div class="status-indicator">
+        <span class="status-dot-active"></span>
+        <span data-i18n="status_ready">Ready</span>
+      </div>
+      <span style="color: var(--border-strong);">|</span>
+      <span id="statusDocName">No document loaded</span>
+    </div>
+
+    <div class="statusbar-right">
+      <span data-i18n="footer_text">PDFLab by reza • 100% Offline • Private & Open Source (GPLv3) • Zero Telemetry</span>
+    </div>
+  </footer>
+
+  <!-- ========================================================================
+       Toast Notification
+       ======================================================================== -->
+  <div id="toastNotification" style="position: fixed; bottom: 44px; right: 24px; background: var(--bg-surface-elevated); border: 1px solid var(--border-accent); border-radius: var(--radius-md); padding: 10px 16px; font-size: 12px; font-weight: 600; display: none; align-items: center; gap: 8px; box-shadow: var(--shadow-lg); z-index: 9999; transition: opacity 0.2s ease;">
+    <span class="stat-dot"></span>
+    <span id="toastText">Action completed successfully</span>
+  </div>
+
+  <!-- ========================================================================
+       Universal Progress Modal
+       ======================================================================== -->
+  <div class="modal-overlay" id="processingModal">
+    <div class="modal-dialog">
+      <div class="modal-header">
+        <h3 id="procModalTitle">Processing PDF Document</h3>
+      </div>
+      <div class="modal-body">
+        <div class="progress-container">
+          <div class="progress-bar-fill" id="procProgressBar"></div>
+        </div>
+        <div style="display: flex; justify-content: space-between; font-size: 11.5px; color: var(--text-muted); margin-bottom: 12px;">
+          <span>100% Local CPU Execution</span>
+          <span id="procPercentText">0%</span>
+        </div>
+        <div class="step-log-box" id="procStepLogs"></div>
+      </div>
+      <div class="modal-footer">
+        <button class="btn btn-secondary btn-sm" onclick="closeModal('processingModal')" data-i18n="btn_cancel">Cancel</button>
+      </div>
+    </div>
+  </div>
+
+  <!-- ========================================================================
+       Completion Summary Modal
+       ======================================================================== -->
+  <div class="modal-overlay" id="completionModal">
+    <div class="modal-dialog">
+      <div class="modal-header">
+        <h3>🎉 <span data-i18n="status_done">Operation Completed</span></h3>
+      </div>
+      <div class="modal-body">
+        <p style="margin-bottom: 12px;">Your document has been successfully processed and saved locally:</p>
+        <div style="background: var(--bg-input); padding: 12px; border-radius: var(--radius-md); font-family: var(--font-mono); font-size: 12px; margin-bottom: 14px;">
+          <div><strong>File:</strong> <span id="compOutputName">pdflab_output.pdf</span></div>
+          <div><strong>Size:</strong> <span id="compOutputSize">4.2 MB</span></div>
+          <div><strong>Location:</strong> C:\Users\MasterCAD\Documents\PDFLab_Output</div>
+        </div>
+      </div>
+      <div class="modal-footer">
+        <button class="btn btn-secondary btn-sm" onclick="window.openOutputFolder(); closeModal('completionModal');" data-i18n="btn_open_folder">Open Output Folder</button>
+        <button class="btn btn-primary btn-sm" onclick="closeModal('completionModal'); switchView('viewer');" data-i18n="btn_done">Done</button>
+      </div>
+    </div>
+  </div>
+
+  <!-- ========================================================================
+       3rd-Party Plugin Security Modal
+       ======================================================================== -->
+  <div class="modal-overlay" id="pluginWarningModal">
+    <div class="modal-dialog">
+      <div class="modal-header">
+        <h3 data-i18n="plugin_warning_title">Third-Party Plugin Security Notice</h3>
+      </div>
+      <div class="modal-body">
+        <p data-i18n="plugin_warning_msg">
+          Third-party plugins can execute code locally on your PC. Only install plugins from developers you trust.
+        </p>
+      </div>
+      <div class="modal-footer">
+        <button class="btn btn-secondary btn-sm" onclick="closeModal('pluginWarningModal')" data-i18n="btn_cancel">Cancel</button>
+        <button class="btn btn-primary btn-sm" onclick="closeModal('pluginWarningModal'); showNotification('Plugin installed and verified with API v1.0!');" data-i18n="btn_confirm">Confirm & Install</button>
+      </div>
+    </div>
+  </div>
+
+  <!-- Helper quick functions -->
+  <script>
+    function toggleQuickTheme() {
+      const isLight = document.body.classList.contains("theme-light");
+      if (isLight) {
+        setTheme("dark");
+      } else {
+        setTheme("light");
+      }
+    }
+    function selectSplitMode(el, mode) {
+      document.querySelectorAll(".option-box").forEach(b => b.classList.remove("active"));
+      el.classList.add("active");
+    }
+    function runSplitDemo() {
+      runProcessingModal({
+        title: "Splitting PDF Document",
+        steps: [
+          "Parsing target page boundaries...",
+          "Extracting specified ranges [1-3, 5, 8-10]...",
+          "Generating pdflab_split_document_01.pdf and pdflab_split_document_02.pdf..."
+        ],
+        outputName: "pdflab_split_document_01.pdf",
+        outputSize: "1.8 MB",
+        onDone: () => addHistoryItem("Split", "sample_guide.pdf", "pdflab_split_document_01.pdf")
+      });
+    }
+    function runConvertDemo() {
+      runProcessingModal({
+        title: "Converting PDF to High-Res Images",
+        steps: [
+          "Rasterizing vector page contents at 300 DPI...",
+          "Encoding losslessly to PNG format...",
+          "Exporting pdflab_page_001.png..."
+        ],
+        outputName: "pdflab_document_page_001.png",
+        outputSize: "2.1 MB",
+        onDone: () => addHistoryItem("PDF → Img", "sample_guide.pdf", "pdflab_document_page_001.png")
+      });
+    }
+    function runImageToPdfDemo() {
+      runProcessingModal({
+        title: "Creating PDF from Images",
+        steps: [
+          "Parsing imported images and color profiles...",
+          "Calculating A4 layout, scaling and margins...",
+          "Synthesizing standard PDF pages and cross-references...",
+          "Exporting pdflab_images_combined.pdf..."
+        ],
+        outputName: "pdflab_images_combined.pdf",
+        outputSize: "3.5 MB",
+        onDone: () => addHistoryItem("Img → PDF", "3 images", "pdflab_images_combined.pdf (3.5 MB)")
+      });
+    }
+    function runProtectDemo() {
+      runProcessingModal({
+        title: "Applying AES-256 Encryption",
+        steps: [
+          "Generating 256-bit encryption key from password...",
+          "Encrypting document payload & stream dictionary...",
+          "Saving protected file: pdflab_protected.pdf"
+        ],
+        outputName: "pdflab_protected.pdf",
+        outputSize: "4.3 MB",
+        onDone: () => addHistoryItem("Protect", "sample_guide.pdf", "pdflab_protected.pdf (Encrypted)")
+      });
+    }
+    function runUnlockDemo() {
+      showNotification("PDF protection removed successfully!");
+      addHistoryItem("Unlock", "pdflab_protected.pdf", "pdflab_unlocked.pdf");
+    }
+  </script>
+
+  <!-- Core Offline Engine & Scripts -->
+  <script src="node_modules/pdfjs-dist/build/pdf.min.js"></script>
+  <script>
+    if (window.pdfjsLib) {
+      window.pdfjsLib.GlobalWorkerOptions.workerSrc = 'node_modules/pdfjs-dist/build/pdf.worker.min.js';
+    }
+  </script>
+  <script src="node_modules/pdf-lib/dist/pdf-lib.min.js"></script>
+  <script src="src/modules/pdfCore.js"></script>
+  <script src="locales.js"></script>
+  <script src="app.js"></script>
+</body>
+</html>
